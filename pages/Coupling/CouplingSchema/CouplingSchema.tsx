@@ -1,97 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
-
-interface ConnectionPoint {
-  id: string;
-  name: string;
-  position: { x: number; y: number };
-  connections: {
-    red1: string | null;
-    red2: string | null;
-    black1: string | null;
-    black2: string | null;
-  };
-}
-
-interface Coupling {
-  id: string;
-  name: string;
-  position: { x: number; y: number };
-  type: 'left' | 'right';
-  connections: number[];
-}
-
-const initialConnectionPoints: ConnectionPoint[] = [
-  {
-    id: '1',
-    name: 'Октябрьская, 16 "Извольте"',
-    position: { x: 200, y: 400 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '2',
-    name: 'Октябрьская, 16 "ДонОбувь"',
-    position: { x: 200, y: 450 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '3',
-    name: 'Октябрская 7А #56921',
-    position: { x: 200, y: 300 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '4',
-    name: 'ТП-28 Октябрьская, 9 #60778',
-    position: { x: 200, y: 250 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '5',
-    name: 'ТП-144 Октябрьская, 14 #60807',
-    position: { x: 200, y: 200 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '6',
-    name: 'Октябрьская 16 "рыжий шеф" #205432',
-    position: { x: 400, y: 150 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  },
-  {
-    id: '7',
-    name: 'Фрунзе 55 под. 7 #bx78404',
-    position: { x: 500, y: 200 },
-    connections: { red1: null, red2: null, black1: null, black2: null }
-  }
-];
-
-const initialCouplings: Coupling[] = [
-  {
-    id: 'left',
-    name: 'муфта мтаг-210',
-    position: { x: 50, y: 300 },
-    type: 'left',
-    connections: Array.from({ length: 24 }, (_, i) => i + 1)
-  },
-  {
-    id: 'right',
-    name: 'муфта мтаг-213',
-    position: { x: 600, y: 150 },
-    type: 'right',
-    connections: Array.from({ length: 24 }, (_, i) => i + 1)
-  }
-];
+import { ConnectionPoint, Coupling } from './CouplingSchema.types';
 
 export const CouplingSchema: React.FC = () => {
-  const [connectionPoints, setConnectionPoints] = useState<ConnectionPoint[]>(initialConnectionPoints);
   const [couplings, setCouplings] = useState<Coupling[]>([]);
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
   const [draggedCoupling, setDraggedCoupling] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-
-  const circleCenter = { x: 800, y: 580 };
-  const circleRadius = 560;
 
   const getNextCouplingPosition = (index: number) => {
     // Располагаем муфты в одну горизонтальную линию

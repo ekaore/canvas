@@ -1,5 +1,5 @@
 import React from "react"
-import { ContainerGrid } from "./Coupling.styles"
+import { ContainerGrid } from "./CouplingItem.styles"
 import { TextField, Typography } from "@mui/material"
 
 interface CouplingItemProps {
