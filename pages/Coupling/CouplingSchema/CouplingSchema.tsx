@@ -3,12 +3,12 @@ import { Box, Typography, Button, Paper } from '@mui/material';
 import { ConnectionPoint, Coupling } from './CouplingSchema.types';
 
 export const CouplingSchema: React.FC = () => {
-  const [couplings, setCouplings] = useState<Coupling[]>([]);
-  const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
-  const [draggedCoupling, setDraggedCoupling] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [couplings, setCouplings] = useState<Coupling[]>([]);//список всех муфт
+  const [selectedPoint, setSelectedPoint] = useState<string | null>(null);//хранит id выделенной “точки соединения” (если пользователь кликнул по ней).
+  const [draggedCoupling, setDraggedCoupling] = useState<string | null>(null);//id муфты, которую сейчас таскают мышью.
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });//смещение курсора внутри прямоугольника (чтобы муфта не “прыгала”, а двигалась плавно).
 
-  const getNextCouplingPosition = (index: number) => {
+  const getNextCouplingPosition = (index: number) => {//1 изменение 
     // Располагаем муфты в одну горизонтальную линию
     const startX = 50; // начальная позиция X
     const spacingX = 60; // расстояние между муфтами по X (ширина муфты + промежуток)
@@ -20,7 +20,7 @@ export const CouplingSchema: React.FC = () => {
     };
   };
 
-  const handlePointClick = (pointId: string) => {
+  const handlePointClick = (pointId: string) => {//2 изменение (когда хотим изменить)
     setSelectedPoint(selectedPoint === pointId ? null : pointId);
   };
 
@@ -137,84 +137,16 @@ export const CouplingSchema: React.FC = () => {
     );
   };
 
-  const renderCoupling = (coupling: Coupling) => {
-    const isLeft = coupling.type === 'left';
-    const connectionSpacing = 8;
-    const startY = coupling.position.y - (coupling.connections.length * connectionSpacing) / 2;
-
-    return (
-      <g key={coupling.id}>
-        {/* Coupling box */}
-        <rect
-          x={coupling.position.x - 30}
-          y={coupling.position.y - 20}
-          width={60}
-          height={40}
-          fill="#f5f5f5"
-          stroke="#333333"
-          strokeWidth={2}
-          rx={4}
-        />
-        <text
-          x={coupling.position.x}
-          y={coupling.position.y - 5}
-          fontSize="10"
-          fill="#333333"
-          textAnchor="middle"
-        >
-          {coupling.name}
-        </text>
-        
-        {/* Connection lines */}
-        {coupling.connections.map((connNum, index) => {
-          const y = startY + index * connectionSpacing;
-          const isRed = connNum <= 4;
-          const color = isRed ? '#ff0000' : '#000000';
-          
-          if (isLeft) {
-            // Left coupling - horizontal lines to the right
-            return (
-              <g key={connNum}>
-                <rect
-                  x={coupling.position.x + 30}
-                  y={y - 1}
-                  width={150}
-                  height={2}
-                  fill={color}
-                />
-                <text
-                  x={coupling.position.x + 35}
-                  y={y + 3}
-                  fontSize="8"
-                  fill="#333333"
-                >
-                  {connNum.toString().padStart(2, '0')}
-                </text>
-              </g>
-            );
-          } else {
-            // Right coupling - vertical lines downward
-            return (
-              <g key={connNum}>
-                <rect
-                  x={coupling.position.x - 1}
-                  y={coupling.position.y + 20}
-                  width={2}
-                  height={100}
-                  fill={color}
-                />
-              </g>
-            );
-          }
-        })}
-      </g>
-    );
-  };
-
   return (
     <Box sx={{ p: 2, position: 'relative' }}>
       {/* "+" button under the title, left side */}
       <Box sx={{ position: 'absolute', left: 16, top: 90, zIndex: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        муфта
+      </Typography>
+      <Typography variant="h6" gutterBottom sx={{ mt: -1, mb: 2 }}>
+        мтаг-212
+      </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -229,7 +161,7 @@ export const CouplingSchema: React.FC = () => {
                   name: `муфта ${index}`,
                   position: { x: pos.x, y: pos.y },
                   type: index % 2 === 0 ? 'right' : 'left',
-                  connections: [index + 1] // только одно соединение с номером муфты
+                  connections: [index + 1] //3 только одно соединение с номером муфты
                 }
               ];
             });
@@ -239,17 +171,12 @@ export const CouplingSchema: React.FC = () => {
           +
         </Button>
       </Box>
-      <Typography variant="h6" gutterBottom>
-        муфта
-      </Typography>
-      <Typography variant="h6" gutterBottom sx={{ mt: -1, mb: 2 }}>
-        мтаг-212
-      </Typography>
+
       
-      <Paper sx={{ p: 0, backgroundColor: 'transparent', boxShadow: 'none', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
+      <Paper sx={{ p: 0, backgroundColor: 'transparent', position: 'absolute'}}>
         <svg
-          width="2000"
-          height="1200"
+          width="4350"
+          height="4350"
           viewBox="0 0 2000 1200"
           style={{ border: 'none' }}
           onMouseMove={handleMouseMove}
@@ -258,8 +185,8 @@ export const CouplingSchema: React.FC = () => {
         >
           {/* Background circle */}
           <circle
-            cx="800"
-            cy="580"
+            cx="560"
+            cy="560"
             r="560"
             fill="#FFFF00"
             stroke="#ff0000"
@@ -305,9 +232,6 @@ export const CouplingSchema: React.FC = () => {
       
       {selectedPoint && (
         <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
-          <Typography variant="h6">
-            Выбрана точка: {connectionPoints.find(p => p.id === selectedPoint)?.name}
-          </Typography>
           <Button variant="outlined" sx={{ mt: 1 }}>
             Редактировать подключения
           </Button>

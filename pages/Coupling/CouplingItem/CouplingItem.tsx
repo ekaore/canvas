@@ -18,6 +18,6 @@ export const CouplingItem = ({ value, onChange }: CouplingItemProps) => {
         variant="outlined"
         size="small"
       />
-    </ContainerGrid>
+      </ContainerGrid>
   )
 }
