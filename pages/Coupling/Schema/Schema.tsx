@@ -58,11 +58,13 @@ export const CouplingSchema: React.FC = () => {
     }
   };
 
+  const hendlerOf = () => {
+    
+  }
   const handleMouseUp = () => {
     setDraggedCoupling(null);
     setDragOffset({ x: 0, y: 0 });
-  };
-
+  }
   return (
     <Box sx={{ position: 'relative' }}>
 
