@@ -8,42 +8,6 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/@mui/material@latest/umd/material-ui.development.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .coupling-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .add-button {
-            background: #1976d2;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .add-button:hover {
-            background: #1565c0;
-        }
-        input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -55,7 +19,7 @@
         const { useState } = React;
         const { Button, TextField, Typography, Grid } = MaterialUI;
 
-        function CouplingItem({ value, onChange }) {
+        function EditorСoupling({ value, onChange }) {
             return (
                 <div className="coupling-item">
                     <Typography variant="body1">{value}</Typography>
@@ -69,7 +33,6 @@
                 </div>
             );
         }
-
         function Coupling() {
             const [count, setCount] = useState([]);
 

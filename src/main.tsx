@@ -1,9 +1,9 @@
 import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Editor } from './pages/Coupling/Editor'
+import App from './App'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Editor />
+    <App/>
   </StrictMode>,
 )
