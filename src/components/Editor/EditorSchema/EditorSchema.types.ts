@@ -1,3 +1,4 @@
+
 export interface ConnectionPoint {
   id: string;
   name: string;
@@ -7,7 +8,7 @@ export interface ConnectionPoint {
     red2: string | null;
     black1: string | null;
     black2: string | null;
-  };
+  };  
 }
 
 export interface Coupling {
@@ -16,4 +17,12 @@ export interface Coupling {
   position: { x: number; y: number };
   type: 'left' | 'right';
   connections: number[];
+}
+
+export interface CouplingSchemaProps {
+  couplings: Coupling[];
+  setCouplings: React.Dispatch<React.SetStateAction<Coupling[]>>;
+  scale: number;
+  setScale: React.Dispatch<React.SetStateAction<number>>;
+  offset: { x: number; y: number };
 }

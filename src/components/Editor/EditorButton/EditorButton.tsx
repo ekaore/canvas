@@ -1,21 +1,22 @@
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import React from "react";
+import { Typography, Button } from "@mui/material";
+import {
+  EditorButtonBoxContainer,
+  EditorButtonClick,
+} from "./EditorButton.styles";
+import { CouplingDashboardProps } from "./EditorButton.types";
 
-interface CouplingDashboardProps {
-  onAddCoupling: () => void;
-}
 //будет относится к инструментам, пока находится тут!
-export const EditorButton: React.FC<CouplingDashboardProps> = ({ onAddCoupling }) => (
-  <Box sx={{ position: 'absolute', marginRight: '600px' }}>
-    <Typography variant="h6" gutterBottom>муфта</Typography>
-    <Typography variant="h6" gutterBottom>мтаг-212</Typography>
-    <Button
+export const EditorButton: React.FC<CouplingDashboardProps> = ({
+  onAddCoupling,
+}) => (
+  <EditorButtonBoxContainer>
+    <EditorButtonClick
       variant="contained"
       color="primary"
       onClick={onAddCoupling}
-      sx={{ minWidth: 48, width: 48, height: 48, fontSize: 24, p: 0 }}
     >
       +
-    </Button>
-  </Box>
+    </EditorButtonClick>
+  </EditorButtonBoxContainer>
 );
