@@ -1,13 +1,12 @@
-import React from "react"
-import { Editor } from "./components/Editor/Editor"
+import React from "react";
+import { Editor } from "./components/Editor/Editor";
 
 function App() {
-
   return (
     <>
-        <Editor />
+      <Editor />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,25 +1,34 @@
 import React, { useState } from "react";
 import { CouplingSchemaProps } from "../EditorSchema/EditorSchema.types";
+import { EditorSchemaBoxContainer } from "./EditorSchema.styles";
+import { useAppDispatch } from "../../../app/hook";
 import {
-  EditorSchemaBoxContainer,
-} from "./EditorSchema.styles";
-
-export const EditorSchema: React.FC<CouplingSchemaProps> = ({
-  couplings,
+  updateCouplingPosition,
   setCouplings,
+} from "../../../entities/canvas/couplingSlice";
+
+export const EditorSchema = ({
+  couplings,
   scale,
   setScale,
   offset,
-}) => {
+}: CouplingSchemaProps) => {
   const [dragged, setDragged] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [prevMouse, setPrevMouse] = useState<{ x: number; y: number } | null>(
+    null
+  );
 
+  const dispatch = useAppDispatch();
+
+  // --- Зум ---
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault();
     const delta = e.deltaY < 0 ? 0.1 : -0.1;
     setScale((prev) => Math.min(Math.max(prev + delta, 0.1), 5));
   };
 
+  // --- Начало перетаскивания ---
   const handleMouseDown = (id: string, e: React.MouseEvent<SVGElement>) => {
     const c = couplings.find((c) => c.id === id);
     if (!c) return;
@@ -36,39 +45,47 @@ export const EditorSchema: React.FC<CouplingSchemaProps> = ({
       x: (e.clientX - rect.left) * scaleX - c.position.x,
       y: (e.clientY - rect.top) * scaleY - c.position.y,
     });
+
+    setPrevMouse({ x: e.clientX, y: e.clientY });
   };
 
+  // --- Движение мыши ---
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!dragged) return;
+    if (!dragged || !prevMouse) return;
+
+    const dx = e.clientX - prevMouse.x;
+    const dy = e.clientY - prevMouse.y;
+
+    if (dx === 0 && dy === 0) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const scaleX = 4350 / rect.width;
     const scaleY = 4350 / rect.height;
 
-    const newPos = {
-      x: (e.clientX - rect.left) * scaleX - dragOffset.x,
-      y: (e.clientY - rect.top) * scaleY - dragOffset.y,
-    };
+    const deltaX = dx * scaleX;
+    const deltaY = dy * scaleY;
 
-    const dragData = couplings.find((c) => c.id === dragged);
-    if (!dragData) return;
+    // Двигаем ВСЕ муфты
+    const movedCouplings = couplings.map((c) => ({
+      ...c,
+      position: {
+        x: c.position.x + deltaX,
+        y: c.position.y + deltaY,
+      },
+    }));
 
-    const deltaX = newPos.x - dragData.position.x;
-    const deltaY = newPos.y - dragData.position.y;
+    dispatch(setCouplings(movedCouplings));
 
-    setCouplings((prev) =>
-      prev.map((c) => ({
-        ...c,
-        position: {
-          x: c.position.x + deltaX,
-          y: c.position.y + deltaY,
-        },
-      }))
-    );
+    setPrevMouse({ x: e.clientX, y: e.clientY });
   };
 
-  const handleMouseUp = () => setDragged(null);
+  // --- Отпускание мыши ---
+  const handleMouseUp = () => {
+    setDragged(null);
+    setPrevMouse(null);
+  };
 
+  // --- Рендер ---
   return (
     <EditorSchemaBoxContainer>
       <svg
@@ -117,7 +134,7 @@ export const EditorSchema: React.FC<CouplingSchemaProps> = ({
                   onMouseDown={(e) => handleMouseDown(c.id, e)}
                   style={{ cursor: "move" }}
                 >
-                  {(i + 1).toString().padStart(2, "0")}-
+                  {(i + 1).toString().padStart(2, "0") + "-"}
                 </text>
               </g>
             );
