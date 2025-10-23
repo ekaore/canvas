@@ -15,16 +15,12 @@ import {
 import React from "react";
 import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import MouseIcon from '@mui/icons-material/Mouse';
-import { EditorButton } from "../EditorButton/EditorButton";
+import MouseIcon from "@mui/icons-material/Mouse";
+import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 
 const drawerWidth = 240;
 
-interface EditorDrawerProps {
-  onAddCoupling: () => void;
-}
-
-export const EditorDrawer = ({onAddCoupling}:EditorDrawerProps ) => {
+export const EditorDrawer = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -77,7 +73,7 @@ export const EditorDrawer = ({onAddCoupling}:EditorDrawerProps ) => {
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
-            {open && <EditorButton onAddCoupling={onAddCoupling} />}
+            {open && <EditorButton />}
           </ListItem>
         </List>
       </Drawer>

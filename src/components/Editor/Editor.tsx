@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import { EditorDrawer } from "./EditorDrawer/EditorDrawer";
-import { Coupling } from "./EditorSchema/EditorSchema.types";
 import { EditorSchema } from "./EditorSchema/EditorSchema";
-import { EditorButton } from "./EditorButton/EditorButton";
+import { EditorButton } from "./EditorTools/EditorButton/EditorButton";
+import { Coupling } from "../../types/model.types";
+import { useAppSelector } from "../../app/hook";
 
 export const Editor = () => {
-  const [couplings, setCouplings] = useState<Coupling[]>([]);
+  const couplings = useAppSelector((state) => state.coupling.couplings);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -15,30 +16,12 @@ export const Editor = () => {
     y: 700,
   });
 
-  const handleAddCoupling = () => {
-    setCouplings((prev) => {
-      const index = prev.length + 1;
-      const pos = getNextCouplingPosition(index);
-      return [//
-        ...prev,
-        {
-          id: `added-${index}`,
-          name: `муфта ${index}`,
-          position: pos,
-          type: index % 2 === 0 ? "right" : "left",
-          connections: [index + 1],
-        },
-      ];
-    });
-  };
-
   return (
     <Grid>
-      <EditorDrawer onAddCoupling={handleAddCoupling}/>
-      <EditorButton onAddCoupling={handleAddCoupling} />
+      <EditorDrawer />
+      <EditorButton />
       <EditorSchema
         couplings={couplings}
-        setCouplings={setCouplings}
         scale={scale}
         setScale={setScale}
         offset={offset}
