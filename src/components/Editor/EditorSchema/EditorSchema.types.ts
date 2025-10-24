@@ -5,4 +5,5 @@ export interface CouplingSchemaProps {
   scale: number;
   setScale: React.Dispatch<React.SetStateAction<number>>;
   offset: { x: number; y: number };
+  setOffset: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
 }

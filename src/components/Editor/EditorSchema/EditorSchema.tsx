@@ -12,6 +12,7 @@ export const EditorSchema = ({
   scale,
   setScale,
   offset,
+  setOffset,
 }: CouplingSchemaProps) => {
   const [dragged, setDragged] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -24,8 +25,27 @@ export const EditorSchema = ({
   // --- Зум ---
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault();
-    const delta = e.deltaY < 0 ? 0.1 : -0.1;
-    setScale((prev) => Math.min(Math.max(prev + delta, 0.1), 5));
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Нормализуем координаты мыши относительно SVG
+    const normalizedX = (mouseX / rect.width) * 4350;
+    const normalizedY = (mouseY / rect.height) * 4350;
+    
+    // Определяем направление зума
+    const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+    const newScale = Math.min(Math.max(scale * zoomFactor, 0.1), 5);
+    
+    if (newScale !== scale) {
+      // Вычисляем новый offset для центрирования зума относительно позиции мыши
+      const newOffsetX = normalizedX - (normalizedX - offset.x) * (newScale / scale);
+      const newOffsetY = normalizedY - (normalizedY - offset.y) * (newScale / scale);
+      
+      setScale(newScale);
+      setOffset({ x: newOffsetX, y: newOffsetY });
+    }
   };
 
   // --- Начало перетаскивания ---
