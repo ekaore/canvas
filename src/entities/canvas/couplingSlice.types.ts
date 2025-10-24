@@ -6,3 +6,4 @@ export interface CouplingState {
   loading: boolean; // Если происходит загрузка/сохранение
   error: string | null; // Ошибки
 }
+ 

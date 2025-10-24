@@ -1,50 +1,44 @@
 import React, { useState } from "react";
-import { CouplingSchemaProps } from "../EditorSchema/EditorSchema.types";
 import { EditorSchemaBoxContainer } from "./EditorSchema.styles";
-import { useAppDispatch } from "../../../app/hook";
-import {
-  updateCouplingPosition,
-  setCouplings,
-} from "../../../entities/canvas/couplingSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
+import { setCouplings } from "../../../entities/canvas/couplingSlice";
+import { setOffset, setScale } from "../../../entities/canvas/schemaSlice";
 
-export const EditorSchema = ({
-  couplings,
-  scale,
-  setScale,
-  offset,
-  setOffset,
-}: CouplingSchemaProps) => {
+export const EditorSchema = () => {
   const [dragged, setDragged] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 }); //  Это смещение относительно точки клика, когда пользователь тянет отдельную муфту
   const [prevMouse, setPrevMouse] = useState<{ x: number; y: number } | null>(
     null
   );
-
+  const couplings = useAppSelector((state) => state.coupling.couplings);
+  const {scale , offset}  = useAppSelector((state) => state.editorSchema);
   const dispatch = useAppDispatch();
 
   // --- Зум ---
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault();
-    
+
     const rect = e.currentTarget.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    
+
     // Нормализуем координаты мыши относительно SVG
     const normalizedX = (mouseX / rect.width) * 4350;
     const normalizedY = (mouseY / rect.height) * 4350;
-    
+
     // Определяем направление зума
     const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
     const newScale = Math.min(Math.max(scale * zoomFactor, 0.1), 5);
-    
+
     if (newScale !== scale) {
       // Вычисляем новый offset для центрирования зума относительно позиции мыши
-      const newOffsetX = normalizedX - (normalizedX - offset.x) * (newScale / scale);
-      const newOffsetY = normalizedY - (normalizedY - offset.y) * (newScale / scale);
-      
-      setScale(newScale);
-      setOffset({ x: newOffsetX, y: newOffsetY });
+      const newOffsetX =
+        normalizedX - (normalizedX - offset.x) * (newScale / scale);
+      const newOffsetY =
+        normalizedY - (normalizedY - offset.y) * (newScale / scale);
+
+        dispatch(setScale(newScale));
+        dispatch(setOffset({ x: newOffsetX, y: newOffsetY }))
     }
   };
 
