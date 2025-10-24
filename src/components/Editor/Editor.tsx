@@ -25,6 +25,7 @@ export const Editor = () => {
         scale={scale}
         setScale={setScale}
         offset={offset}
+        setOffset={setOffset}
       />
     </Grid>
   );
