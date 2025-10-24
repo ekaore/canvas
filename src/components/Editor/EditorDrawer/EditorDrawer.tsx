@@ -1,6 +1,7 @@
 import { Menu } from "@mui/icons-material";
 import {
   AppBar,
+  Box,
   CssBaseline,
   Drawer,
   IconButton,
