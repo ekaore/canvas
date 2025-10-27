@@ -4,6 +4,7 @@ export const EditorSchemaBoxContainer = styled(Box)({
     width: '100vw',
     height: '100vh',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',

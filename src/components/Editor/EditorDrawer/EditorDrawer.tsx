@@ -1,10 +1,7 @@
-import { Menu } from "@mui/icons-material";
 import {
   AppBar,
-  Box,
   CssBaseline,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -19,24 +16,16 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
 import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 export const EditorDrawer = () => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   return (
     <EditorDrawerBoxContainer>
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <IconButton color="inherit" edge="start" onClick={toggleDrawer}>
-            <Menu />
-          </IconButton>
           <Typography variant="h6" noWrap>
             Редактор
           </Typography>
@@ -45,18 +34,13 @@ export const EditorDrawer = () => {
 
       <Drawer
         variant="permanent"
-        open={open}
         sx={{
-          width: open ? drawerWidth : 60,
+          width: drawerWidth, // фиксируем ширину
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: open ? drawerWidth : 60,
+            width: drawerWidth, // фиксируем ширину контейнера
             boxSizing: "border-box",
             overflowX: "hidden",
-            transition: theme.transitions.create("width", {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
           },
         }}
       >
@@ -66,7 +50,7 @@ export const EditorDrawer = () => {
             <ListItemIcon>
               <ConstructionIcon />
             </ListItemIcon>
-            {open && <ListItemText primary="Инструменты" />}
+            <ListItemText primary="Инструменты" />
           </ListItem>
         </List>
         <List>
@@ -74,7 +58,7 @@ export const EditorDrawer = () => {
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
-            {open && <EditorButton />}
+            <EditorButton />
           </ListItem>
         </List>
       </Drawer>

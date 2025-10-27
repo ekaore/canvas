@@ -17,7 +17,7 @@ export const EditorButton = () => {
       id: `added-${index}`,
       name: `муфта ${index}`,
       position: {
-        x: 100 + index * 200,
+        x: 100 + index * 100,
         y: 700,
       },
       type: index % 2 === 0 ? "right" : "left",

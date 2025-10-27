@@ -11,10 +11,23 @@ export const EditorSchema = () => {
   const [prevMouse, setPrevMouse] = useState<{ x: number; y: number } | null>(
     null
   );
+  const [gridStep, setGridStep] = useState(10);
+  const [snapToGrid, setSnapToGrid] = useState(true);
+
   const couplings = useAppSelector((state) => state.coupling.couplings);
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const dispatch = useAppDispatch();
   const svgRef = useRef<SVGSVGElement>(null); // 👈 ссылка на SVG
+
+  // --- Snap to Grid ---
+  const snapToGridPosition = (x: number, y: number) => {
+    if (!snapToGrid) return { x, y };
+    
+    const snappedX = Math.round(x / gridStep) * gridStep;
+    const snappedY = Math.round(y / gridStep) * gridStep;
+    
+    return { x: snappedX, y: snappedY };
+  };
 
   // --- Зум ---
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
@@ -22,8 +35,8 @@ export const EditorSchema = () => {
     const rect = e.currentTarget.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    const normalizedX = (mouseX / rect.width) * 4350;
-    const normalizedY = (mouseY / rect.height) * 4350;
+    const normalizedX = (mouseX / rect.width) * 2000;
+    const normalizedY = (mouseY / rect.height) * 2000;
     const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
     const newScale = Math.min(Math.max(scale * zoomFactor, 0.1), 5);
     if (newScale !== scale) {
@@ -43,8 +56,8 @@ export const EditorSchema = () => {
     const svg = e.currentTarget.ownerSVGElement;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
-    const scaleX = 4350 / rect.width;
-    const scaleY = 4350 / rect.height;
+    const scaleX = 2000 / rect.width;
+    const scaleY = 2000 / rect.height;
     setDragged(id);
     setDragOffset({
       x: (e.clientX - rect.left) * scaleX - c.position.x,
@@ -59,24 +72,26 @@ export const EditorSchema = () => {
     const dy = e.clientY - prevMouse.y;
     if (dx === 0 && dy === 0) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const scaleX = 4350 / rect.width;
-    const scaleY = 4350 / rect.height;
+    const scaleX = 2000 / rect.width;
+    const scaleY = 2000 / rect.height;
     const deltaX = dx * scaleX;
     const deltaY = dy * scaleY;
-    const movedCouplings = couplings.map((c) => ({
-      ...c,
-      position: {
-        x: c.position.x + deltaX,
-        y: c.position.y + deltaY,
-      },
-    }));
+    
+    // Перемещаем все муфты вместе с прилипанием к сетке
+    const movedCouplings = couplings.map((c) => {
+      const newX = c.position.x + deltaX;
+      const newY = c.position.y + deltaY;
+      const snappedPosition = snapToGridPosition(newX, newY);
+      
+      return {
+        ...c,
+        position: snappedPosition,
+      };
+    });
+    
     dispatch(setCouplings(movedCouplings));
     setPrevMouse({ x: e.clientX, y: e.clientY });
   };
-
-  const hendle = () => {
-    
-  }
 
   const handleMouseUp = () => {
     setDragged(null);
@@ -86,8 +101,16 @@ export const EditorSchema = () => {
   // --- Сохранить SVG ---
   const handleSaveSVG = () => {
     if (!svgRef.current) return;
+    
+    // Создаем копию SVG без сетки
+    const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
+    
+    // Удаляем все элементы сетки из клона
+    const gridElements = svgClone.querySelectorAll('defs, rect[fill="url(#grid)"]');
+    gridElements.forEach(element => element.remove());
+    
     const serializer = new XMLSerializer();
-    const source = serializer.serializeToString(svgRef.current);
+    const source = serializer.serializeToString(svgClone);
 
     const blob = new Blob(
       ['<?xml version="1.0" encoding="UTF-8"?>\n', source],
@@ -120,15 +143,27 @@ export const EditorSchema = () => {
     };
     reader.readAsText(file);
   };
-  
+
   return (
     <EditorSchemaBoxContainer>
+      <Box display="flex" gap={2} mb={2}>
+        <select
+          value={gridStep}
+          onChange={(e) => setGridStep(Number(e.target.value))}
+          style={{ padding: "4px", borderRadius: "4px" }}
+        >
+          <option value={8}>8px</option>
+          <option value={10}>10px</option>
+          <option value={20}>20px</option>
+        </select>
+      </Box>
+
       <Box>
         <svg
           ref={svgRef}
-          width="1000"
-          height="600"
-          viewBox="0 0 4350 4350"
+          width="1100"
+          height="800"
+          viewBox="0 0 2000 2000"
           style={{ border: "2px solid #9e9e9e" }}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -137,13 +172,52 @@ export const EditorSchema = () => {
         >
           <g transform={`scale(${scale}) translate(${offset.x}, ${offset.y})`}>
             <circle
-              cx="2167"
-              cy="2180"
-              r="2175"
+              cx="1000"
+              cy="1000"
+              r="950"
               fill="#FFFF00"
               stroke="#ff0000"
               strokeWidth="2"
             />
+            <>
+              <defs>
+                <pattern
+                  id="smallGrid"
+                  width={gridStep}
+                  height={gridStep}
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d={`M ${gridStep} 0 L 0 0 0 ${gridStep}`}
+                    fill="none"
+                    stroke="#ccc"
+                    strokeWidth="1"
+                  />
+                </pattern>
+
+                <pattern
+                  id="grid"
+                  width={gridStep * 10}
+                  height={gridStep * 10}
+                  patternUnits="userSpaceOnUse"
+                >
+                  <rect
+                    width={gridStep * 10}
+                    height={gridStep * 10}
+                    fill="url(#smallGrid)"
+                  />
+                  <path
+                    d={`M ${gridStep * 10} 0 L 0 0 0 ${gridStep * 10}`}
+                    fill="none"
+                    stroke="#999"
+                    strokeWidth="1"
+                  />
+                </pattern>
+              </defs>
+
+              <rect width="2000" height="2000" fill="url(#grid)" />
+            </>
+
             {couplings.map((c, i) => {
               const isDragging = dragged === c.id;
               return (
@@ -151,8 +225,8 @@ export const EditorSchema = () => {
                   <rect
                     x={c.position.x - 15}
                     y={c.position.y - 25}
-                    width={150}
-                    height={200}
+                    width={80}
+                    height={100}
                     fill={isDragging ? "#333" : "#000"}
                     stroke={isDragging ? "#fff" : "none"}
                     strokeWidth={isDragging ? 2 : 0}
@@ -160,9 +234,9 @@ export const EditorSchema = () => {
                     style={{ cursor: "move" }}
                   />
                   <text
-                    x={c.position.x + 60}
-                    y={c.position.y + 75}
-                    fontSize="50"
+                    x={c.position.x + 110}
+                    y={c.position.y + 43}
+                    fontSize="40"
                     fill="#fff"
                     textAnchor="middle"
                     dominantBaseline="middle"
