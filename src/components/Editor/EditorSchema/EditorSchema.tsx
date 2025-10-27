@@ -46,6 +46,10 @@ export const EditorSchema = () => {
       dispatch(setOffset({ x: newOffsetX, y: newOffsetY }));
     }
   };
+
+  const hendl = () => {
+
+  }
   
 
   // --- Драг ---
