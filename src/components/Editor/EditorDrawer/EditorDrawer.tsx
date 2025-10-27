@@ -1,11 +1,9 @@
-import { Menu } from "@mui/icons-material";
 import {
   AppBar,
   Box,
   Button,
   CssBaseline,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -13,62 +11,74 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  ListItemButton,
 } from "@mui/material";
 import React from "react";
 import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
+import TextFieldsIcon from "@mui/icons-material/TextFields";
 import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 import { useAppDispatch } from "../../../app/hook";
 import { clearCouplings } from "../../../entities/canvas/couplingSlice";
+import { addText, clearTexts } from "../EditorTitle/textSlice";
 
 const drawerWidth = 250;
 
-  export const EditorDrawer = () => {
-    const theme = useTheme();
-    const dispatch = useAppDispatch();
+export const EditorDrawer = () => {
+  const theme = useTheme();
+  const dispatch = useAppDispatch();
 
-    // Обработчик кнопки "Новый холст"
-    const handleNewCanvas = () => {
-      dispatch(clearCouplings());
-    };
+  // Кнопка "Новый холст"
+  const handleNewCanvas = () => {
+    dispatch(clearCouplings());
+    dispatch(clearTexts());
+  };
 
-    return (
-      <EditorDrawerBoxContainer>
-        <CssBaseline />
-        <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography variant="h6" noWrap>
-                Редактор
-              </Typography>
-            </Box>
+  // Добавить новый текст
+  const handleAddText = () => {
+    dispatch(
+      addText({
+        id: Date.now().toString(),
+        x: 500,
+        y: 500,
+        text: "Новый текст",
+      })
+    );
+  };
 
-            {/* 🔹 Кнопка "Новый холст" справа */}
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={handleNewCanvas}
-              sx={{
-                textTransform: "none",
-                borderColor: "white",
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
-              }}
-            >
-              Новый холст
-            </Button>
-          </Toolbar>
-        </AppBar>
+  return (
+    <EditorDrawerBoxContainer>
+      <CssBaseline />
+      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography variant="h6" noWrap>
+            Редактор
+          </Typography>
+
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={handleNewCanvas}
+            sx={{
+              textTransform: "none",
+              borderColor: "white",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
+            }}
+          >
+            Новый холст
+          </Button>
+        </Toolbar>
+      </AppBar>
 
       <Drawer
         variant="permanent"
         sx={{
-          width: drawerWidth, // фиксируем ширину
+          width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth, // фиксируем ширину контейнера
+            width: drawerWidth,
             boxSizing: "border-box",
-            overflowX: "hidden",
           },
         }}
       >
@@ -80,13 +90,21 @@ const drawerWidth = 250;
             </ListItemIcon>
             <ListItemText primary="Инструменты" />
           </ListItem>
-        </List>
-        <List>
+
           <ListItem>
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
             <EditorButton />
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleAddText}>
+              <ListItemIcon>
+                <TextFieldsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Добавить текст" />
+            </ListItemButton>
           </ListItem>
         </List>
       </Drawer>
