@@ -15,7 +15,9 @@ export const EditorSchema = () => {
   const [gridStep, setGridStep] = useState(10);
   const [snapToGrid, setSnapToGrid] = useState(true);
 
-  const couplings = useAppSelector((state) => state.coupling.couplings);
+  const couplings = useAppSelector(state =>
+    state.coupling.groups.flatMap(group => group.couplings)
+  );
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const dispatch = useAppDispatch();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -80,7 +82,7 @@ export const EditorSchema = () => {
       y: (e.clientY - rect.top) * scaleY - c.position.y,
     });
     setPrevMouse({ x: e.clientX, y: e.clientY });
-  };
+  };  
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!dragged || !prevMouse) return;

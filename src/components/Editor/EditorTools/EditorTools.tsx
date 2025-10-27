@@ -1,10 +1,10 @@
 import React from "react";
-import { EditorButton } from "./EditorButton/EditorButton";
+import { EditorButtonEvent } from "./EditorButton/EditorButtonEvent";
 
 export const EditorTools = () => {
   return (
     <>
-      <EditorButton />
+      <EditorButtonEvent/>
     </>
   );
 };

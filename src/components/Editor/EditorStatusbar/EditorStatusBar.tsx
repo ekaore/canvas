@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useAppSelector } from "../../../app/hook";
-import { RootState } from "../../../app/store";
 
 export const EditorStatusBar = () => {
-  const zoom = useAppSelector((state) => state.editorSchema.zoom); // текущий масштаб
-  const cursor = useAppSelector((state) => state.editorSchema.cursor); // координаты курсора
+  const { zoom, cursor } = useAppSelector((state) => state.editorSchema);
 
   return (
     <Box
