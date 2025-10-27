@@ -2,8 +2,9 @@ import React, { useRef, useState } from "react";
 import { EditorSchemaBoxContainer } from "./EditorSchema.styles";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import { setCouplings } from "../../../entities/canvas/couplingSlice";
-import { setOffset, setScale } from "../../../entities/canvas/schemaSlice";
+import { setOffset, setScale, setZoom } from "../../../entities/canvas/schemaSlice"; 
 import { Box, Button } from "@mui/material";
+import { setCursor } from "../../../entities/canvas/schemaSlice";
 
 export const EditorSchema = () => {
   const [dragged, setDragged] = useState<string | null>(null);
@@ -14,27 +15,38 @@ export const EditorSchema = () => {
   const couplings = useAppSelector((state) => state.coupling.couplings);
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const dispatch = useAppDispatch();
-  const svgRef = useRef<SVGSVGElement>(null); // 👈 ссылка на SVG
+  const svgRef = useRef<SVGSVGElement>(null);
 
   // --- Зум ---
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault();
+  
     const rect = e.currentTarget.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     const normalizedX = (mouseX / rect.width) * 4350;
     const normalizedY = (mouseY / rect.height) * 4350;
+  
     const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
     const newScale = Math.min(Math.max(scale * zoomFactor, 0.1), 5);
+  
     if (newScale !== scale) {
       const newOffsetX =
         normalizedX - (normalizedX - offset.x) * (newScale / scale);
       const newOffsetY =
         normalizedY - (normalizedY - offset.y) * (newScale / scale);
+  
+      // --- Обновляем масштаб ---
       dispatch(setScale(newScale));
+  
+      // --- Обновляем зум (чтобы показывался в статусной строке) ---
+      dispatch(setZoom(newScale));
+  
+      // --- Обновляем смещение ---
       dispatch(setOffset({ x: newOffsetX, y: newOffsetY }));
     }
   };
+  
 
   // --- Драг ---
   const handleMouseDown = (id: string, e: React.MouseEvent<SVGElement>) => {
@@ -54,15 +66,26 @@ export const EditorSchema = () => {
   };
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!dragged || !prevMouse) return;
-    const dx = e.clientX - prevMouse.x;
-    const dy = e.clientY - prevMouse.y;
-    if (dx === 0 && dy === 0) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const scaleX = 4350 / rect.width;
     const scaleY = 4350 / rect.height;
+  
+    // --- Обновляем координаты курсора ---
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    dispatch(setCursor({ x: Math.round(x), y: Math.round(y) }));
+  
+    // --- Если нет активного перетаскивания — выходим ---
+    if (!dragged || !prevMouse) return;
+  
+    // --- Перемещение выбранных муфт ---
+    const dx = e.clientX - prevMouse.x;
+    const dy = e.clientY - prevMouse.y;
+    if (dx === 0 && dy === 0) return;
+  
     const deltaX = dx * scaleX;
     const deltaY = dy * scaleY;
+  
     const movedCouplings = couplings.map((c) => ({
       ...c,
       position: {
@@ -70,6 +93,7 @@ export const EditorSchema = () => {
         y: c.position.y + deltaY,
       },
     }));
+  
     dispatch(setCouplings(movedCouplings));
     setPrevMouse({ x: e.clientX, y: e.clientY });
   };

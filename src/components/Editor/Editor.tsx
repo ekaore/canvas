@@ -3,6 +3,7 @@ import { Grid } from "@mui/material";
 import { EditorDrawer } from "./EditorDrawer/EditorDrawer";
 import { EditorSchema } from "./EditorSchema/EditorSchema";
 import { EditorButton } from "./EditorTools/EditorButton/EditorButton";
+import { EditorStatusBar } from "./EditorStatusbar/EditorStatusBar";
 
 export const Editor = () => {
 
@@ -10,7 +11,8 @@ export const Editor = () => {
     <Grid>
       <EditorDrawer />
       <EditorButton />
-      <EditorSchema/>
+      <EditorSchema />
+      <EditorStatusBar />
     </Grid>
   );
 };

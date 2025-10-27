@@ -1,44 +1,57 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Coupling } from "../../types/model.types";
-//ДУМАЮ НУЖЕН ЛИ ОН ВООБЩЕ!!
+
 interface EditorSchemaState {
-  couplings: Coupling[];        // массив всех муфт на схеме
-  scale: number;                // масштаб (зум) схемы
-  offset: { x: number; y: number }; // смещение схемы (для перемещения)
+  couplings: Coupling[];            // массив всех муфт на схеме
+  scale: number;                    // масштаб (зум)
+  offset: { x: number; y: number }; // смещение
+  cursor: { x: number; y: number }; // координаты курсора
+  zoom: number;                     // текущий уровень зума
 }
 
-// Начальное состояние редактора схемы
+// --- Начальное состояние ---
 const initialState: EditorSchemaState = {
-  couplings: [],                // изначально муфт нет
-  scale: 1,                     // стандартный масштаб
-  offset: { x: 0, y: 0 },       // схема изначально не смещена
+  couplings: [],
+  scale: 1,
+  offset: { x: 0, y: 0 },
+  cursor: { x: 0, y: 0 },
+  zoom: 1,
 };
 
-// Создаём слайс Redux
+// --- Slice ---
 export const schemaReducer = createSlice({
-  name: "editorSchema",         // имя слайса
-  initialState,                 // начальное состояние
-  reducers: {                   // объект с редьюсерами (функциями, которые меняют состояние)
-    
-    // Редьюсер для установки массива муфт
+  name: "editorSchema",
+  initialState,
+  reducers: {
+    // Установка массива муфт
     setCouplings(state, action: PayloadAction<Coupling[]>) {
-      state.couplings = action.payload; // заменяем текущий массив на новый
+      state.couplings = action.payload;
     },
-    
-    // Редьюсер для изменения масштаба схемы
+
+    // Масштабирование схемы
     setScale(state, action: PayloadAction<number>) {
-      state.scale = action.payload; // задаём новый масштаб
+      state.scale = action.payload;
     },
-    
-    // Редьюсер для изменения смещения схемы
+
+    // Смещение схемы
     setOffset(state, action: PayloadAction<{ x: number; y: number }>) {
-      state.offset = action.payload; // задаём новые координаты смещения
+      state.offset = action.payload;
+    },
+
+    // Координаты курсора
+    setCursor(state, action: PayloadAction<{ x: number; y: number }>) {
+      state.cursor = action.payload;
+    },
+
+    // екущий зум
+    setZoom(state, action: PayloadAction<number>) {
+      state.zoom = action.payload;
     },
   },
 });
 
-// Экспортируем созданные экшены, чтобы их можно было вызывать из компонентов
-export const { setCouplings, setScale, setOffset } = schemaReducer.actions;
+// Экспорт
+export const { setCouplings, setScale, setOffset, setCursor, setZoom } =
+  schemaReducer.actions;
 
-// Экспортируем сам редьюсер, чтобы добавить его в store
 export default schemaReducer.reducer;
