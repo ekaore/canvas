@@ -1,16 +1,18 @@
 import { Coupling } from "../../types/model.types";
 
-export interface CouplingGroup {//масив муфт
+export interface CouplingGroup {
   id: string;
-  name: string;//название группы
-  couplings: Coupling[];//массив муфт, которые принадлежат этой группе.
+  name: string;
+  couplings: Coupling[];
+  orientation?: "horizontal" | "vertical"; // ✅ добавляем это поле
 }
 
 export interface CouplingState {
-  couplings: Coupling[]; // получается 1 массив муфт
-  groups: CouplingGroup[];//массив групп, каждая группа хранит свои муфты
-  activeGroupId: string | null;//какая группа сейчас выделена
-  activeCouplingId: string | null; // id отдельной муфты
-  loading: boolean;//загрузка(если понадобится)
-  error: string | null;//ошибка (если понадобится)
+  couplings: Coupling[];
+  groups: CouplingGroup[];
+  activeGroupId: string | null;
+  activeCouplingId: string | null;
+  loading: boolean;
+  error: string | null;
+  orientation: "horizontal" | "vertical"; // можно оставить, если нужно для всего состояния
 }
