@@ -9,7 +9,7 @@ const initialState: CouplingState = {
   activeCouplingId: null, // ID активного "coupling", если выбран
   loading: false, // Флаг загрузки (пока не используется)s
   error: null, //ошибка
-  groups: [], //массив групп
+  groups: [], //массив всех массивов муфт
   activeGroupId: null, //какая группа выбрана
 };
 
@@ -18,7 +18,6 @@ const couplingsSlice = createSlice({
   name: "couplings",
   initialState,
   reducers: {
-    // Создать новую группу муфт
     addGroupWithCouplings: (state, action: PayloadAction<{ name: string, couplings: Coupling[] }>) => {
       const newGroup: CouplingGroup = {
         id: uuidv4(),
@@ -31,21 +30,10 @@ const couplingsSlice = createSlice({
     setGroups: (state, action: PayloadAction<CouplingGroup[]>) => {
       state.groups = action.payload;
     },
-    
-
     // Выбрать активную группу
     setActiveGroup: (state, action: PayloadAction<string | null>) => {
       state.activeGroupId = action.payload;
     },
-
-    // Добавить массив муфт в активную группу
-    addCouplingsToActiveGroup: (state, action: PayloadAction<Coupling[]>) => {
-      const group = state.groups.find((g) => g.id === state.activeGroupId);
-      if (group) {
-        group.couplings.push(...action.payload);
-      }
-    },
-
     // Удалить группу по id
     removeGroup: (state, action: PayloadAction<string>) => {
       state.groups = state.groups.filter((g) => g.id !== action.payload);
@@ -53,7 +41,6 @@ const couplingsSlice = createSlice({
         state.activeGroupId = null;
       }
     },
-
     // Очистить все группы
     clearGroups: (state) => {
       state.groups = [];
@@ -94,11 +81,6 @@ const couplingsSlice = createSlice({
     setCouplings: (state, action: PayloadAction<Coupling[]>) => {
       state.couplings = action.payload;
     },
-    // Очищает все couplings и снимает активный выбор
-    clearCouplings: (state) => {
-      state.couplings = [];
-      state.activeCouplingId = null;
-    },
   },
 });
 
@@ -107,7 +89,6 @@ export const {
   addGroupWithCouplings,
   setActiveGroup,
   setGroups,
-  addCouplingsToActiveGroup,
   removeGroup,
   clearGroups,
   addCoupling,
@@ -116,7 +97,6 @@ export const {
   removeCoupling,
   setActiveCoupling,
   setCouplings,
-  clearCouplings,
 } = couplingsSlice.actions;
 
 // Экспортируем редьюсер для добавления в store

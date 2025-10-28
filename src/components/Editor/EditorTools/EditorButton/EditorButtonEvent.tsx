@@ -4,10 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../../../app/hook";
 import { Coupling } from "../../../../types/model.types";
 import { v4 as uuidv4 } from "uuid";
 import { addGroupWithCouplings } from "../../../../entities/canvas/couplingSlice";
+import { presets } from "./EditorButtonEvent.const";
 
 export const EditorButtonEvent = () => {
   const [value, setValue] = useState<number | string>("");
-  const presets = [2, 4, 6, 8, 10, 12, 14, 16, 32, 48];
   const dispatch = useAppDispatch();
   const couplings = useAppSelector((state) => state.coupling.groups);
 
@@ -18,10 +18,9 @@ export const EditorButtonEvent = () => {
   const handleAddCoupling = () => {
     const count = Number(value);
     if (!count || count <= 0) return;
-  
     const startIndex = 1;
     const newCouplings: Coupling[] = [];
-  
+
     for (let i = 0; i < count; i++) {
       const index = startIndex + i;
       const newCoupling: Coupling = {
@@ -33,20 +32,14 @@ export const EditorButtonEvent = () => {
       };
       newCouplings.push(newCoupling);
     }
-  
-    // Сохраняем массив муфт как новую группу
     dispatch(
       addGroupWithCouplings({
-        name: `Группа ${couplings.length + 1}`,
+        name: `${couplings.length + 1}`,
         couplings: newCouplings,
       })
     );
-    
-  
-    setValue(""); // очищаем поле
+    setValue("");
   };
-  
-  
 
   return (
     <Box display="flex" flexDirection="column" gap={2} sx={{ p: 2 }}>
@@ -58,7 +51,6 @@ export const EditorButtonEvent = () => {
         fullWidth
         size="small"
       />
-
       <Stack direction="row" flexWrap="wrap" gap={1}>
         {presets.map((num) => (
           <Button
@@ -71,14 +63,13 @@ export const EditorButtonEvent = () => {
           </Button>
         ))}
       </Stack>
-
       <Button
         variant="outlined"
         color="success"
         disabled={!value}
         onClick={handleAddCoupling}
       >
-        Добавить на холст
+        Добавить
       </Button>
     </Box>
   );

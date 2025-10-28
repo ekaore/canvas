@@ -1,11 +1,5 @@
 import { Coupling } from "../../types/model.types";
 
-// export interface CouplingState {
-//   activeCouplingId: string | null; // Какая муфта выделена
-//   loading: boolean; // Если происходит загрузка/сохранение
-//   error: string | null; // Ошибки
-// }
-
 export interface CouplingGroup {//масив муфт
   id: string;
   name: string;//название группы

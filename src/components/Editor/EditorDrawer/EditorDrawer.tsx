@@ -17,7 +17,7 @@ import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
 import { useAppDispatch } from "../../../app/hook";
-import { clearCouplings } from "../../../entities/canvas/couplingSlice";
+import { clearGroups } from "../../../entities/canvas/couplingSlice";
 import { EditorTools } from "../EditorTools/EditorTools";
 
 export const EditorDrawer = () => {
@@ -26,7 +26,7 @@ export const EditorDrawer = () => {
   const drawerWidth = 250;
 
   const handleNewCanvas = () => {
-    dispatch(clearCouplings());
+    dispatch(clearGroups());
   };
 
   return (
