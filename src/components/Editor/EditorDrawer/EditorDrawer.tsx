@@ -11,22 +11,41 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  ListItemButton,
 } from "@mui/material";
 import React from "react";
 import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
+import TextFieldsIcon from "@mui/icons-material/TextFields";
 import { useAppDispatch } from "../../../app/hook";
 import { clearGroups } from "../../../entities/canvas/couplingSlice";
+import { addText, clearTexts } from "../EditorTitle/textSlice";
 import { EditorTools } from "../EditorTools/EditorTools";
+import { v4 as uuidv4 } from "uuid";
+
 
 export const EditorDrawer = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const drawerWidth = 250;
 
+  // Кнопка "Новый холст"
   const handleNewCanvas = () => {
     dispatch(clearGroups());
+    dispatch(clearTexts());
+  };
+
+  // Добавить новый текст
+  const handleAddText = () => {
+    dispatch(
+      addText({
+        id: uuidv4(),
+        x: 500,
+        y: 500,
+        text: "Новый текст",
+      })
+    );
   };
 
   return (
@@ -54,7 +73,6 @@ export const EditorDrawer = () => {
           </Button>
         </Toolbar>
       </AppBar>
-
       <Drawer
         variant="permanent"
         sx={{
@@ -63,7 +81,6 @@ export const EditorDrawer = () => {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
-            overflowX: "hidden",
           },
         }}
       >
@@ -75,13 +92,21 @@ export const EditorDrawer = () => {
             </ListItemIcon>
             <ListItemText primary="Инструменты" />
           </ListItem>
-        </List>
-        <List>
+
           <ListItem>
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
             <EditorTools />
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleAddText}>
+              <ListItemIcon>
+                <TextFieldsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Добавить текст" />
+            </ListItemButton>
           </ListItem>
         </List>
       </Drawer>

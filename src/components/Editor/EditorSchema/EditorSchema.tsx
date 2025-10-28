@@ -1,19 +1,21 @@
 import React, { useRef, useState, useEffect } from "react";
 import { EditorSchemaBoxContainer } from "./EditorSchema.styles";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
-import { addGroupWithCouplings, setCouplings } from "../../../entities/canvas/couplingSlice";
 import {
-  setOffset,
-  setScale,
-} from "../../../entities/canvas/schemaSlice";
+  addGroupWithCouplings,
+  setCouplings,
+} from "../../../entities/canvas/couplingSlice";
+import { setOffset, setScale } from "../../../entities/canvas/schemaSlice";
 import { Box, Button } from "@mui/material";
 import { useSchemaDrag } from "../hooks/useSchemaDrag/useSchemaDrag";
 import { useSvgZoom } from "../hooks/useSvgZoom/useSvgZoom";
+import { EditorText } from "../EditorTitle/EditorText";
 
 export const EditorSchema = () => {
   const [gridStep, setGridStep] = useState(10);
   const [snapToGrid, setSnapToGrid] = useState(true);
   const dispatch = useAppDispatch();
+  const texts = useAppSelector((state) => state.text.items); // ✅ добавлено
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const scaleRef = useRef(scale);
   const { svgRef } = useSvgZoom({ initialScale: scale, initialOffset: offset });
@@ -58,13 +60,13 @@ export const EditorSchema = () => {
   const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
         const json = JSON.parse(event.target?.result as string);
         console.log("JSON файл:", json);
-  
+
         if (json.couplings) {
           // Создаём новую группу из импортированных муфт
           dispatch(
@@ -74,7 +76,7 @@ export const EditorSchema = () => {
             })
           );
         }
-  
+
         if (json.scale) dispatch(setScale(json.scale));
         if (json.offset) dispatch(setOffset(json.offset));
       } catch (err) {
@@ -84,7 +86,6 @@ export const EditorSchema = () => {
     };
     reader.readAsText(file);
   };
-  
 
   return (
     <EditorSchemaBoxContainer>
@@ -119,44 +120,42 @@ export const EditorSchema = () => {
               stroke="#ff0000"
               strokeWidth="2"
             />
-            <>
-              <defs>
-                <pattern
-                  id="smallGrid"
-                  width={gridStep}
-                  height={gridStep}
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d={`M ${gridStep} 0 L 0 0 0 ${gridStep}`}
-                    fill="none"
-                    stroke="#ccc"
-                    strokeWidth="1"
-                  />
-                </pattern>
 
-                <pattern
-                  id="grid"
+            <defs>
+              <pattern
+                id="smallGrid"
+                width={gridStep}
+                height={gridStep}
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d={`M ${gridStep} 0 L 0 0 0 ${gridStep}`}
+                  fill="none"
+                  stroke="#ccc"
+                  strokeWidth="1"
+                />
+              </pattern>
+              <pattern
+                id="grid"
+                width={gridStep * 10}
+                height={gridStep * 10}
+                patternUnits="userSpaceOnUse"
+              >
+                <rect
                   width={gridStep * 10}
                   height={gridStep * 10}
-                  patternUnits="userSpaceOnUse"
-                >
-                  <rect
-                    width={gridStep * 10}
-                    height={gridStep * 10}
-                    fill="url(#smallGrid)"
-                  />
-                  <path
-                    d={`M ${gridStep * 10} 0 L 0 0 0 ${gridStep * 10}`}
-                    fill="none"
-                    stroke="#999"
-                    strokeWidth="1"
-                  />
-                </pattern>
-              </defs>
+                  fill="url(#smallGrid)"
+                />
+                <path
+                  d={`M ${gridStep * 10} 0 L 0 0 0 ${gridStep * 10}`}
+                  fill="none"
+                  stroke="#999"
+                  strokeWidth="1"
+                />
+              </pattern>
+            </defs>
 
-              <rect width="2000" height="2000" fill="url(#grid)" />
-            </>
+            <rect width="2000" height="2000" fill="url(#grid)" />
             {localGroups.map((group) =>
               group.couplings.map((c: any, i: number) => (
                 <g key={c.id}>
@@ -186,9 +185,13 @@ export const EditorSchema = () => {
                 </g>
               ))
             )}
+            {texts.map((t) => (
+              <EditorText key={t.id} id={t.id} x={t.x} y={t.y} text={t.text} />
+            ))}
           </g>
         </svg>
       </Box>
+
       <Box
         style={{ display: "flex", justifyContent: "flex-end", margin: "50px" }}
       >
