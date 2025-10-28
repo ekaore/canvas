@@ -12,18 +12,25 @@ import {
   Typography,
   useTheme,
   ListItemButton,
+  Divider,
+  ListSubheader,
 } from "@mui/material";
 import React from "react";
 import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
+import FormatSizeIcon from "@mui/icons-material/FormatSize";
 import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 import { useAppDispatch } from "../../../app/hook";
 import { clearCouplings } from "../../../entities/canvas/couplingSlice";
-import { addText, clearTexts } from "../EditorTitle/textSlice";
+import { addText, clearTexts } from "../EditorTitle/EditorText/TextSlice";
+import { TextSettingsPanel } from "../EditorTitle/EditorText/EditorTextSettingsPanel";
+// import { addText, clearTexts } from "../EditorTitle/TextSlice";
+// import { TextSettingsPanel } from "../EditorTitle/TextSettingsPanel";
 
-const drawerWidth = 250;
+// Размер панели
+const drawerWidth = 300;
 
 export const EditorDrawer = () => {
   const theme = useTheme();
@@ -98,13 +105,26 @@ export const EditorDrawer = () => {
             <EditorButton />
           </ListItem>
 
-          <ListItem disablePadding>
+        <Divider />
+
+        <List subheader={<ListSubheader>Настройки текста</ListSubheader>}>
+        <ListItem disablePadding>
             <ListItemButton onClick={handleAddText}>
               <ListItemIcon>
                 <TextFieldsIcon />
               </ListItemIcon>
               <ListItemText primary="Добавить текст" />
             </ListItemButton>
+          </ListItem>
+        </List>
+
+          <ListItem>
+            <ListItemIcon>
+              <FormatSizeIcon />
+            </ListItemIcon>
+            <Box sx={{ flexGrow: 1 }}>
+              <TextSettingsPanel />
+            </Box>
           </ListItem>
         </List>
       </Drawer>

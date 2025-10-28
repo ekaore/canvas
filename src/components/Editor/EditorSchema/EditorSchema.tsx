@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import { setCouplings } from "../../../entities/canvas/couplingSlice";
 import { setOffset, setScale, setZoom, setCursor } from "../../../entities/canvas/schemaSlice";
 import { Box, Button } from "@mui/material";
-import { EditorText } from "../EditorTitle/EditorText"; // ✅ добавлено
+import { EditorText } from "../EditorTitle/EditorText/EditorText";
+// import { EditorText } from "../EditorTitle/EditorText";
 
 export const EditorSchema = () => {
   const [dragged, setDragged] = useState<string | null>(null);
@@ -211,7 +212,7 @@ export const EditorSchema = () => {
               );
             })}
 
-            {/* ✅ Отображаем текстовые элементы */}
+            {/* Отображаем текстовые элементы */}
             {texts.map((t) => (
               <EditorText key={t.id} id={t.id} x={t.x} y={t.y} text={t.text} />
             ))}
