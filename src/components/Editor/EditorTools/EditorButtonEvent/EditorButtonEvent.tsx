@@ -16,6 +16,8 @@ export const EditorButtonEvent = () => {
     setCount(num);
   };
 
+  const hendl = () => {}
+
   const handleAddCoupling = () => {
     const numCount = Number(count);
     if (!numCount || numCount <= 0) return;
