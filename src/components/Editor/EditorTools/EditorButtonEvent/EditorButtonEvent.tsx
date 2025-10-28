@@ -7,50 +7,69 @@ import { addGroupWithCouplings } from "../../../../entities/canvas/couplingSlice
 import { presets } from "./EditorButtonEvent.const";
 
 export const EditorButtonEvent = () => {
-  const [value, setValue] = useState<number | string>("");
+  const [count, setCount] = useState<number | null>(null);     // Количество муфт
+  const [startIndex, setStartIndex] = useState<number>(1);     // Стартовый номер
   const dispatch = useAppDispatch();
   const couplings = useAppSelector((state) => state.coupling.groups);
 
   const handlePresetClick = (num: number) => {
-    setValue(num);
+    setCount(num);
   };
 
   const handleAddCoupling = () => {
-    const count = Number(value);
-    if (!count || count <= 0) return;
-    const startIndex = 1;
+    const numCount = Number(count);
+    if (!numCount || numCount <= 0) return;
+
     const newCouplings: Coupling[] = [];
 
-    for (let i = 0; i < count; i++) {
-      const index = startIndex + i;
+    for (let i = 0; i < numCount; i++) {
+      const portNumber = startIndex + i;
+
       const newCoupling: Coupling = {
         id: uuidv4(),
-        name: `муфта ${index}`,
-        position: { x: 100 + index * 100, y: 700 },
-        type: index % 2 === 0 ? "right" : "left",
+        name: `муфта ${portNumber}`,
+        title: `${portNumber}`,
+        position: { x: 100 + i * 100, y: 700 },
+        type: portNumber % 2 === 0 ? "right" : "left",
         connections: [],
       };
       newCouplings.push(newCoupling);
     }
+
     dispatch(
       addGroupWithCouplings({
         name: `${couplings.length + 1}`,
         couplings: newCouplings,
       })
     );
-    setValue("");
+
+    setCount(null);
+    setStartIndex(1)
   };
 
   return (
     <Box display="flex" flexDirection="column" gap={2} sx={{ p: 2 }}>
+      {/* Количество муфт */}
       <TextField
         label="Количество муфт"
         type="number"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={count ?? ""}
+        onChange={(e) => setCount(Number(e.target.value))}
         fullWidth
         size="small"
       />
+
+      {/* Стартовый номер */}
+      <TextField
+        label="Стартовый номер"
+        type="number"
+        value={startIndex}
+        onChange={(e) => setStartIndex(Number(e.target.value))}
+        fullWidth
+        size="small"
+      />
+
+      {/* Быстрый выбор */}
       <Stack direction="row" flexWrap="wrap" gap={1}>
         {presets.map((num) => (
           <Button
@@ -58,15 +77,17 @@ export const EditorButtonEvent = () => {
             variant="contained"
             color="primary"
             onClick={() => handlePresetClick(num)}
+            sx={{ height: "25px" }}
           >
             {num}
           </Button>
         ))}
       </Stack>
+
+      {/* Добавить */}
       <Button
         variant="outlined"
-        color="success"
-        disabled={!value}
+        disabled={!count}
         onClick={handleAddCoupling}
       >
         Добавить

@@ -165,7 +165,7 @@ export const EditorSchema = () => {
                     width={80}
                     height={100}
                     fill="#000"
-                    onMouseDown={(e) => beginDrag(group.id, e)} // 👈 теперь вызываем из хука
+                    onMouseDown={(e) => beginDrag(group.id, e)} 
                     style={{ cursor: "move" }}
                   />
                   <text
@@ -177,10 +177,10 @@ export const EditorSchema = () => {
                     dominantBaseline="middle"
                     fontWeight="bold"
                     transform={`rotate(-90 ${c.position.x + 60} ${c.position.y + 75})`}
-                    onMouseDown={(e) => beginDrag(group.id, e)} // 👈 тоже drag
+                    onMouseDown={(e) => beginDrag(group.id, e)}
                     style={{ cursor: "move" }}
                   >
-                    {(i + 1).toString().padStart(2, "0") + "-"}
+                    {(c.title ?? (i + 1)).toString().padStart(2, "0")+ "-"}
                   </text>
                 </g>
               ))

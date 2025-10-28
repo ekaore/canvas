@@ -1,6 +1,7 @@
 export interface Coupling {
     id: string; // Уникальный идентификатор муфты
     name: string; // Название (например, "Муфта 1")
+    title: string;
     position: {
       // Координаты на схеме
       x: number;
