@@ -24,7 +24,12 @@ const textSlice = createSlice({
     },
     updateText: (
       state,
-      action: PayloadAction<{ id: string; text: string; x?: number; y?: number }>
+      action: PayloadAction<{
+        id: string;
+        text: string;
+        x?: number;
+        y?: number;
+      }>
     ) => {
       const item = state.items.find((t) => t.id === action.payload.id);
       if (item) {

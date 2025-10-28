@@ -18,20 +18,21 @@ import { EditorDrawerBoxContainer } from "./EditorDrawer.styles";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import MouseIcon from "@mui/icons-material/Mouse";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
-import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 import { useAppDispatch } from "../../../app/hook";
-import { clearCouplings } from "../../../entities/canvas/couplingSlice";
+import { clearGroups } from "../../../entities/canvas/couplingSlice";
 import { addText, clearTexts } from "../EditorTitle/textSlice";
+import { EditorTools } from "../EditorTools/EditorTools";
+import { v4 as uuidv4 } from "uuid";
 
-const drawerWidth = 250;
 
 export const EditorDrawer = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const drawerWidth = 250;
 
   // Кнопка "Новый холст"
   const handleNewCanvas = () => {
-    dispatch(clearCouplings());
+    dispatch(clearGroups());
     dispatch(clearTexts());
   };
 
@@ -39,7 +40,7 @@ export const EditorDrawer = () => {
   const handleAddText = () => {
     dispatch(
       addText({
-        id: Date.now().toString(),
+        id: uuidv4(),
         x: 500,
         y: 500,
         text: "Новый текст",
@@ -52,9 +53,11 @@ export const EditorDrawer = () => {
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="h6" noWrap>
-            Редактор
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography variant="h6" noWrap>
+              Редактор
+            </Typography>
+          </Box>
 
           <Button
             variant="outlined"
@@ -70,7 +73,6 @@ export const EditorDrawer = () => {
           </Button>
         </Toolbar>
       </AppBar>
-
       <Drawer
         variant="permanent"
         sx={{
@@ -95,7 +97,7 @@ export const EditorDrawer = () => {
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
-            <EditorButton />
+            <EditorTools />
           </ListItem>
 
           <ListItem disablePadding>
