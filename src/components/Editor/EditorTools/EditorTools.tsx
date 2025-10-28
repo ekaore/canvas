@@ -1,5 +1,5 @@
 import React from "react";
-import { EditorButtonEvent } from "./EditorButton/EditorButtonEvent";
+import { EditorButtonEvent } from "./EditorButtonEvent/EditorButtonEvent";
 
 export const EditorTools = () => {
   return (
