@@ -27,9 +27,9 @@ const couplingsSlice = createSlice({
         id: uuidv4(),
         name: action.payload.name,
         couplings: action.payload.couplings,
+        orientation: "horizontal", // ✅ начальная ориентация
       };
       state.groups.push(newGroup);
-      // state.activeGroupId = newGroup.id;
     },
     setGroups: (state, action: PayloadAction<CouplingGroup[]>) => {
       state.groups = action.payload;
@@ -108,6 +108,7 @@ const couplingsSlice = createSlice({
         });
       }
     },
+    
   },
 });
 export const {

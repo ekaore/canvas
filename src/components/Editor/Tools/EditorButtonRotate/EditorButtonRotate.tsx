@@ -14,12 +14,12 @@ export const EditorButtonRotate = () => {
       <Button
         variant="contained"
         color="secondary"
-        disabled={!activeGroup}
+        // disabled={!activeGroup}
         onClick={() => {
           if (activeGroupId) dispatch(rotateGroup(activeGroupId));
         }}
       >
-        🔄 Повернуть группу
+        Повернуть группу
       </Button>
     </Box>
   );

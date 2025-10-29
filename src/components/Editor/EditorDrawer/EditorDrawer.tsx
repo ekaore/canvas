@@ -21,14 +21,15 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 import { useAppDispatch } from "../../../app/hook";
 import { clearGroups } from "../../../entities/canvas/couplingSlice";
 import { addText, clearTexts } from "../EditorTitle/textSlice";
-import { EditorTools } from "../EditorTools/EditorTools";
 import { v4 as uuidv4 } from "uuid";
-
+import { EditorButtonEvent } from "../Tools/EditorButtonEvent/EditorButtonEvent";
+import { EditorButtonRotate } from "../Tools/EditorButtonRotate/EditorButtonRotate";
+import CropRotateIcon from "@mui/icons-material/CropRotate";
 
 export const EditorDrawer = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const drawerWidth = 250;
+  const drawerWidth = 300;
 
   // Кнопка "Новый холст"
   const handleNewCanvas = () => {
@@ -97,7 +98,14 @@ export const EditorDrawer = () => {
             <ListItemIcon>
               <MouseIcon />
             </ListItemIcon>
-            <EditorTools />
+            <EditorButtonEvent />
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon>
+              <CropRotateIcon />
+            </ListItemIcon>
+            <EditorButtonRotate />
           </ListItem>
 
           <ListItem disablePadding>

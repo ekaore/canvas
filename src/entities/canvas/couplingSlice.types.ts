@@ -5,6 +5,8 @@ export interface CouplingGroup {
   name: string;
   couplings: Coupling[];
   orientation?: "horizontal" | "vertical"; // ✅ добавляем это поле
+  rotation?: number;
+
 }
 
 export interface CouplingState {
