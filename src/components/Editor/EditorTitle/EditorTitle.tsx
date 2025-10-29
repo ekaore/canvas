@@ -1,31 +1,40 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
-import { useAppDispatch } from "../../../app/hook";
-import { addText } from "./textSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
+import { Box, Button, Slider, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { updateText } from "./EditorText/EditorTextSlice";
 
 export const EditorTitle = () => {
   const dispatch = useAppDispatch();
+  const texts = useAppSelector((state) => state.text.items);
+  const selected = texts[texts.length - 1];
 
-  const handleAddText = () => {
-    const newText = {
-      id: Date.now().toString(),
-      x: Math.random() * 800 + 100, // случайная позиция
-      y: Math.random() * 400 + 100,
-      text: "Новый текст",
-    };
-    dispatch(addText(newText));
-  };
+  if (!selected) return null;
 
   return (
-    <Box display="flex" justifyContent="flex-start" mb={2}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddText}
-        style={{ marginTop: "10px" }}
+    <Box display="flex" gap={2} alignItems="center" p={2}>
+      <Box>
+        <Slider
+          min={10}
+          max={48}
+          value={selected.fontSize}
+          onChange={(_, newValue) =>
+            dispatch(updateText({ id: selected.id, fontSize: newValue as number }))
+          }
+          valueLabelDisplay="auto"
+        />
+      </Box>
+
+      <ToggleButtonGroup
+        value={selected.fontWeight}
+        exclusive
+        onChange={(_, newValue) =>
+          newValue &&
+          dispatch(updateText({ id: selected.id, fontWeight: newValue }))
+        }
       >
-        Добавить текст
-      </Button>
+        <ToggleButton value="normal">Normal</ToggleButton>
+        <ToggleButton value="bold">Bold</ToggleButton>
+      </ToggleButtonGroup>
     </Box>
   );
 };

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import couplingReducer from "../entities/canvas/couplingSlice";
 import schemaReducer from "../entities/canvas/schemaSlice";
-import textReducer from "../components/Editor/EditorTitle/textSlice";
+import textReducer from "../components/Editor/EditorTitle/EditorText/EditorTextSlice";
 
 export const store = configureStore({
   reducer: {

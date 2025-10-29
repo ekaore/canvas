@@ -9,7 +9,7 @@ import { setOffset, setScale } from "../../../entities/canvas/schemaSlice";
 import { Box, Button } from "@mui/material";
 import { useSchemaDrag } from "../hooks/useSchemaDrag/useSchemaDrag";
 import { useSvgZoom } from "../hooks/useSvgZoom/useSvgZoom";
-import { EditorText } from "../EditorTitle/EditorText";
+import { EditorText } from "../EditorTitle/EditorText/EditorText";
 
 export const EditorSchema = () => {
   const [gridStep, setGridStep] = useState(10);
@@ -200,6 +200,7 @@ export const EditorSchema = () => {
               })
             )}
 
+            {/* ✅ Отображаем текстовые элементы */}
             {texts.map((t) => (
               <EditorText key={t.id} id={t.id} x={t.x} y={t.y} text={t.text} />
             ))}
