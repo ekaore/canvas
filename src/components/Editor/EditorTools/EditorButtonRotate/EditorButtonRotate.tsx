@@ -5,18 +5,19 @@ import { rotateGroup } from "../../../../entities/canvas/couplingSlice";
 
 export const EditorButtonRotate = () => {
 
-const { groups } = useAppSelector((state) => state.coupling);
     const dispatch = useAppDispatch();
+    const { groups, activeGroupId } = useAppSelector((state) => state.coupling);
 
-const firstGroupId = groups[0]?.id;
+    const activeGroup = groups.find((g) => g.id === activeGroupId);
   return (
     <Box>
       <Button
         variant="contained"
         color="secondary"
+        disabled={!activeGroup}
         onClick={() => {
-            if (firstGroupId) dispatch(rotateGroup(firstGroupId));
-          }}
+          if (activeGroupId) dispatch(rotateGroup(activeGroupId));
+        }}
       >
         🔄 Повернуть группу
       </Button>

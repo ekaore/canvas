@@ -85,7 +85,6 @@ const couplingsSlice = createSlice({
     setCouplings: (state, action: PayloadAction<Coupling[]>) => {
       state.couplings = action.payload;
     },
-    // couplingSlice.ts
     rotateGroup: (state, action) => {
       const group = state.groups.find((g) => g.id === action.payload);
       if (!group) return;
@@ -111,8 +110,6 @@ const couplingsSlice = createSlice({
     },
   },
 });
-
-// Экспортируем действия (action creators) для использования в компонентах
 export const {
   addGroupWithCouplings,
   setActiveGroup,
@@ -128,5 +125,4 @@ export const {
   rotateGroup
 } = couplingsSlice.actions;
 
-// Экспортируем редьюсер для добавления в store
 export default couplingsSlice.reducer;
