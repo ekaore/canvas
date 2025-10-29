@@ -12,7 +12,6 @@ import {
   Typography,
   useTheme,
   ListItemButton,
-  Divider,
   ListSubheader,
 } from "@mui/material";
 import React from "react";
@@ -24,10 +23,9 @@ import FormatSizeIcon from "@mui/icons-material/FormatSize";
 import { EditorButton } from "../EditorTools/EditorButton/EditorButton";
 import { useAppDispatch } from "../../../app/hook";
 import { clearCouplings } from "../../../entities/canvas/couplingSlice";
-import { addText, clearTexts } from "../EditorTitle/EditorText/TextSlice";
 import { TextSettingsPanel } from "../EditorTitle/EditorText/EditorTextSettingsPanel";
-// import { addText, clearTexts } from "../EditorTitle/TextSlice";
-// import { TextSettingsPanel } from "../EditorTitle/TextSettingsPanel";
+import { addText, clearTexts } from "../EditorTitle/EditorText/EditorTextSlice";
+import { Divider } from "../EditorTitle/EditorText/EditorTextSettingsPanel.styles";
 
 // Размер панели
 const drawerWidth = 300;
@@ -119,9 +117,6 @@ export const EditorDrawer = () => {
         </List>
 
           <ListItem>
-            <ListItemIcon>
-              <FormatSizeIcon />
-            </ListItemIcon>
             <Box sx={{ flexGrow: 1 }}>
               <TextSettingsPanel />
             </Box>

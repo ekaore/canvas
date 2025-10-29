@@ -12,8 +12,7 @@ import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
 import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
 import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
 import { useAppDispatch } from "../../../../app/hook";
-import { updateText } from "./TextSlice";
-// import { updateText } from "../EditorTextSlice";
+import { updateText } from "./EditorTextSlice";
 
 interface Props {
   id: string;
@@ -45,7 +44,7 @@ export const EditorTextToolbar: React.FC<Props> = ({
           </MenuItem>
         ))}
       </Select>
-
+      
       {/* Кнопка жирного текста */}
       <ToggleButton
         value="bold"

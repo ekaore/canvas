@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import { Box, Button, Slider, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { updateText } from "./EditorText/TextSlice";
+import { updateText } from "./EditorText/EditorTextSlice";
 
 export const EditorTitle = () => {
   const dispatch = useAppDispatch();
@@ -12,7 +12,6 @@ export const EditorTitle = () => {
 
   return (
     <Box display="flex" gap={2} alignItems="center" p={2}>
-      {/* Размер шрифта */}
       <Box>
         <Slider
           min={10}
@@ -25,7 +24,6 @@ export const EditorTitle = () => {
         />
       </Box>
 
-      {/* Жирность */}
       <ToggleButtonGroup
         value={selected.fontWeight}
         exclusive

@@ -5,7 +5,6 @@ import { setCouplings } from "../../../entities/canvas/couplingSlice";
 import { setOffset, setScale, setZoom, setCursor } from "../../../entities/canvas/schemaSlice";
 import { Box, Button } from "@mui/material";
 import { EditorText } from "../EditorTitle/EditorText/EditorText";
-// import { EditorText } from "../EditorTitle/EditorText";
 
 export const EditorSchema = () => {
   const [dragged, setDragged] = useState<string | null>(null);
@@ -15,7 +14,7 @@ export const EditorSchema = () => {
   const [snapToGrid, setSnapToGrid] = useState(true);
 
   const couplings = useAppSelector((state) => state.coupling.couplings);
-  const texts = useAppSelector((state) => state.text.items); // ✅ добавлено
+  const texts = useAppSelector((state) => state.text.items);
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const dispatch = useAppDispatch();
   const svgRef = useRef<SVGSVGElement>(null);

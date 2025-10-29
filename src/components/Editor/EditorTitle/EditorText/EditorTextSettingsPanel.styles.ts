@@ -1,15 +1,15 @@
 import { styled } from "@mui/material/styles";
+import { Divider as MuiDivider } from "@mui/material";
 
 export const PanelContainer = styled("div")(() => ({
   display: "grid",
   gap: "20px",
   alignItems: "center",
-  padding: "10px 16px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "12px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-  width: "fit-content",
 }));
+
+export const Divider = styled(MuiDivider)({
+  margin: "15px 0",
+});
 
 export const Label = styled("label")(() => ({
   fontSize: "14px",
@@ -34,16 +34,17 @@ export const NumberInput = styled("input")(() => ({
 
 export const ToggleButton = styled("button")<{ active?: boolean }>(
   ({ active }) => ({
-    background: active ? "#1976d2" : "transparent",
+    background: active ? "#1976d2" : "ccc",
     color: active ? "#fff" : "#333",
     border: "none",
     borderRadius: "6px",
     padding: "6px 10px",
+    width: "90px",
     cursor: "pointer",
     fontWeight: "bold",
     transition: "all 0.2s",
     "&:hover": {
-      background: active ? "#1565c0" : "rgba(0,0,0,0.05)",
+      background: active ? "#1565c0" : "bbb",
     },
   })
 );

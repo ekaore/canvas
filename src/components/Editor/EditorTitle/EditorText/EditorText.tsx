@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../app/hook";
-import { selectText, updateText } from "./TextSlice";
-// import { updateText, selectText } from "../EditorTextSlice";
+import { selectText, updateText } from "./EditorTextSlice";
 
 interface EditorTextProps {
   id: string;

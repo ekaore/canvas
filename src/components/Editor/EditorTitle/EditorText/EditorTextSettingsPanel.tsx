@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../app/hook";
-// import { updateText } from "../EditorTextSlice";
-
+import { Box } from "@mui/material";
+import { updateText } from "./EditorTextSlice";
 
 import {
   PanelContainer,
@@ -9,8 +9,6 @@ import {
   NumberInput,
   ToggleButton,
 } from "./EditorTextSettingsPanel.styles";
-import { updateText } from "./TextSlice";
-import { Box } from "@mui/material";
 
 export const TextSettingsPanel = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +19,6 @@ export const TextSettingsPanel = () => {
   if (!selected) return null;
 
   return (
-    <Box sx={{ position: "absolute", top: 80, left: 280 }}>
     <PanelContainer>
       {/* Размер текста */}
       <Label>
@@ -58,6 +55,5 @@ export const TextSettingsPanel = () => {
         Жирный
       </ToggleButton>
     </PanelContainer>
-    </Box>
   );
 };
