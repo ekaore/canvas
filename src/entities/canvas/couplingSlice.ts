@@ -11,6 +11,7 @@ const initialState: CouplingState = {
   error: null, //ошибка
   groups: [], //массив всех массивов муфт
   activeGroupId: null, //какая группа выбрана
+  orientation: "horizontal",
 };
 
 // Создаем slice с именем "couplings"
@@ -18,15 +19,18 @@ const couplingsSlice = createSlice({
   name: "couplings",
   initialState,
   reducers: {
-    addGroupWithCouplings: (state, action: PayloadAction<{ name: string, couplings: Coupling[] }>) => {
+    addGroupWithCouplings: (
+      state,
+      action: PayloadAction<{ name: string; couplings: Coupling[] }>
+    ) => {
       const newGroup: CouplingGroup = {
         id: uuidv4(),
         name: action.payload.name,
         couplings: action.payload.couplings,
+        orientation: "horizontal", // ✅ начальная ориентация
       };
       state.groups.push(newGroup);
-      // state.activeGroupId = newGroup.id;
-    },  
+    },
     setGroups: (state, action: PayloadAction<CouplingGroup[]>) => {
       state.groups = action.payload;
     },
@@ -81,10 +85,32 @@ const couplingsSlice = createSlice({
     setCouplings: (state, action: PayloadAction<Coupling[]>) => {
       state.couplings = action.payload;
     },
+    rotateGroup: (state, action) => {
+      const group = state.groups.find((g) => g.id === action.payload);
+      if (!group) return;
+
+      const first = group.couplings[0].position;
+      const step = 100;
+
+      // Если горизонтально — делаем вертикально
+      if (!group.orientation || group.orientation === "horizontal") {
+        group.orientation = "vertical";
+        group.couplings.forEach((c, i) => {
+          c.position.x = first.x;
+          c.position.y = first.y + step * i;
+        });
+      } else {
+        // Вернём обратно горизонтально
+        group.orientation = "horizontal";
+        group.couplings.forEach((c, i) => {
+          c.position.x = first.x + step * i;
+          c.position.y = first.y;
+        });
+      }
+    },
+    
   },
 });
-
-// Экспортируем действия (action creators) для использования в компонентах
 export const {
   addGroupWithCouplings,
   setActiveGroup,
@@ -97,7 +123,7 @@ export const {
   removeCoupling,
   setActiveCoupling,
   setCouplings,
+  rotateGroup
 } = couplingsSlice.actions;
 
-// Экспортируем редьюсер для добавления в store
 export default couplingsSlice.reducer;

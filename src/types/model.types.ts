@@ -11,4 +11,6 @@ export interface Coupling {
     connections: string[]; // ID соединений (какие элементы к ней подключены)
     layerId?: string; // Опционально — принадлежность к слою
     selected?: boolean; // Для UI — выделена ли муфта
+    rotation?: number;
+
   }

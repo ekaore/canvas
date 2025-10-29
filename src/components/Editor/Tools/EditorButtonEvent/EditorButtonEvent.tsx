@@ -30,6 +30,7 @@ export const EditorButtonEvent = () => {
         name: `муфта ${portNumber}`,
         title: `${portNumber}`,
         position: { x: 100 + i * 100, y: 700 },
+        rotation: -90, // ✅ цифры на левом боку
         type: portNumber % 2 === 0 ? "right" : "left",
         connections: [],
       };
@@ -76,7 +77,7 @@ export const EditorButtonEvent = () => {
             variant="contained"
             color="primary"
             onClick={() => handlePresetClick(num)}
-            sx={{ height: "25px" }}
+            sx={{ height: "25px", }}   
           >
             {num}
           </Button>
@@ -86,7 +87,7 @@ export const EditorButtonEvent = () => {
       {/* Добавить */}
       <Button
         variant="outlined"
-        disabled={!count}
+        // disabled={!count}
         onClick={handleAddCoupling}
       >
         Добавить

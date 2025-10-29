@@ -3,7 +3,7 @@ import { EditorSchemaBoxContainer } from "./EditorSchema.styles";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import {
   addGroupWithCouplings,
-  setCouplings,
+  setActiveGroup,
 } from "../../../entities/canvas/couplingSlice";
 import { setOffset, setScale } from "../../../entities/canvas/schemaSlice";
 import { Box, Button } from "@mui/material";
@@ -15,7 +15,7 @@ export const EditorSchema = () => {
   const [gridStep, setGridStep] = useState(10);
   const [snapToGrid, setSnapToGrid] = useState(true);
   const dispatch = useAppDispatch();
-  const texts = useAppSelector((state) => state.text.items); // ✅ добавлено
+  const texts = useAppSelector((state) => state.text.items);
   const { scale, offset } = useAppSelector((state) => state.editorSchema);
   const scaleRef = useRef(scale);
   const { svgRef } = useSvgZoom({ initialScale: scale, initialOffset: offset });
@@ -157,34 +157,49 @@ export const EditorSchema = () => {
 
             <rect width="2000" height="2000" fill="url(#grid)" />
             {localGroups.map((group) =>
-              group.couplings.map((c: any, i: number) => (
-                <g key={c.id}>
-                  <rect
-                    x={c.position.x - 15}
-                    y={c.position.y - 25}
-                    width={80}
-                    height={100}
-                    fill="#000"
-                    onMouseDown={(e) => beginDrag(group.id, e)} 
-                    style={{ cursor: "move" }}
-                  />
-                  <text
-                    x={c.position.x + 110}
-                    y={c.position.y + 43}
-                    fontSize="40"
-                    fill="#fff"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontWeight="bold"
-                    transform={`rotate(-90 ${c.position.x + 60} ${c.position.y + 75})`}
-                    onMouseDown={(e) => beginDrag(group.id, e)}
-                    style={{ cursor: "move" }}
-                  >
-                    {(c.title ?? (i + 1)).toString().padStart(2, "0")+ "-"}
-                  </text>
-                </g>
-              ))
+              group.couplings.map((c: any, i: number) => {
+                const offsetYTop = 10; // отступ сверху
+                const offsetYBottom = 10; // отступ снизу
+                const rectHeight = 110 - offsetYTop - offsetYBottom;
+
+                return (
+                  <g key={c.id} transform={`translate(0, ${offsetYTop})`}>
+                    <rect
+                      x={c.position.x - 15}
+                      y={c.position.y - 25}
+                      width={80}
+                      height={rectHeight}
+                      fill="#000"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        dispatch(setActiveGroup(group.id));
+                        beginDrag(group.id, e);
+                      }}
+                      style={{ cursor: "move" }}
+                    />
+                    <text
+                      x={c.position.x + 110}
+                      y={c.position.y + 43}
+                      fontSize="40"
+                      fill="#fff"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontWeight="bold"
+                      transform={`rotate(${c.rotation ?? -90} ${c.position.x + 60} ${c.position.y + 75})`}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        dispatch(setActiveGroup(group.id));
+                        beginDrag(group.id, e);
+                      }}
+                      style={{ cursor: "move" }}
+                    >
+                      {(c.title ?? i + 1).toString().padStart(2, "0") + "-"}
+                    </text>
+                  </g>
+                );
+              })
             )}
+
             {texts.map((t) => (
               <EditorText key={t.id} id={t.id} x={t.x} y={t.y} text={t.text} />
             ))}
