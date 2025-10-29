@@ -22,7 +22,7 @@ const initialState: TextState = {
 };
 
 // --- Slice ---
-const editorTextSlice = createSlice({
+const textSlice = createSlice({
   name: "text",
   initialState,
   reducers: {
@@ -70,6 +70,6 @@ const editorTextSlice = createSlice({
 });
 
 export const { addText, updateText, removeText, selectText, clearTexts } =
-  editorTextSlice.actions;
+  textSlice.actions;
 
-export default editorTextSlice.reducer;
+export default textSlice.reducer;
